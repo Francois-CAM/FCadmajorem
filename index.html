@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Accès serveur</title>
+    <style>
+      body {
+        font-family: Arial;
+        text-align: center;
+        margin-top: 80px;
+      }
+      #panel {
+        display: none;
+      }
+      button {
+        padding: 10px 20px;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Connexion</h2>
+
+    <div id="login">
+      <input type="password" id="pwd" placeholder="Mot de passe" />
+      <button onclick="login()">Entrer</button>
+    </div>
+
+    <div id="panel">
+      <h2 id="status">Chargement...</h2>
+      <button id="btn" style="display: none">Accéder au serveur</button>
+    </div>
+
+    <script>
+      const PASSWORD = "1234"; // 🔴 change ici
+
+      function login() {
+        const input = document.getElementById("pwd").value;
+        if (input === PASSWORD) {
+          document.getElementById("login").style.display = "none";
+          document.getElementById("panel").style.display = "block";
+          loadStatus();
+        } else {
+          alert("Mot de passe incorrect");
+        }
+      }
+
+      function loadStatus() {
+        fetch("https://hello-word.francoisjmclermont.workers.dev/status")
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.online && data.url) {
+              document.getElementById("status").innerText =
+                "Le serveur est en fonction";
+
+              const btn = document.getElementById("btn");
+              btn.style.display = "block";
+              btn.onclick = () => (window.location.href = data.url);
+            } else {
+              document.getElementById("status").innerText =
+                "Désolé, le serveur est fermé...";
+            }
+          })
+          .catch(() => {
+            document.getElementById("status").innerText = "Erreur de connexion";
+          });
+      }
+    </script>
+  </body>
+</html>
