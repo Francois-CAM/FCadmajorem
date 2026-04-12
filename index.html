@@ -47,26 +47,34 @@
         }
       }
 
-      function loadStatus() {
-          fetch("https://hello-word.francoisjmclermont.workers.dev/status")
-            .then(r => {
-              if (!r.ok) throw new Error("HTTP error");
-              return r.json();
-            })
-            .then(data => {
-              if (data.online && data.url) {
-                document.getElementById("status").innerText = "Serveur en fonction";
-                document.getElementById("btn").style.display = "block";
-                document.getElementById("btn").onclick = () => window.location.href = data.url;
-              } else {
-                document.getElementById("status").innerText = "Serveur fermé";
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              console.log("JS chargé");
-              document.getElementById("status").innerText = "Erreur de connexion API";
-            });;
+function loadStatus() {
+  console.log("Appel API...");
+
+  fetch("https://hello-word.francoisjmclermont.workers.dev/status")
+    .then(r => {
+      console.log("HTTP status:", r.status);
+      return r.text(); // 👈 IMPORTANT debug brut
+    })
+    .then(text => {
+      console.log("Réponse brute:", text);
+
+      const data = JSON.parse(text);
+
+      if (data.online && data.url) {
+        document.getElementById("status").innerText = "Serveur en fonction";
+        document.getElementById("btn").style.display = "block";
+        document.getElementById("btn").onclick = () =>
+          window.location.href = data.url;
+      } else {
+        document.getElementById("status").innerText = "Serveur fermé";
+      }
+    })
+    .catch(err => {
+      console.error("ERREUR:", err);
+      document.getElementById("status").innerText =
+        "Erreur de connexion API";
+    });
+}
       }
     </script>
   </body>
