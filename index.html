@@ -20,6 +20,7 @@
     </style>
   </head>
   <body>
+    <p>TEST FETCH...</p>
     <h2>Connexion</h2>
 
     <div id="login">
@@ -63,6 +64,7 @@
             })
             .catch(err => {
               console.log(err);
+              console.log("JS chargé");
               document.getElementById("status").innerText = "Erreur de connexion API";
             });;
       }
