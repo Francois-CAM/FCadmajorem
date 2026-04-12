@@ -47,24 +47,24 @@
       }
 
       function loadStatus() {
-        fetch("https://hello-word.francoisjmclermont.workers.dev/status")
-          .then((r) => r.json())
-          .then((data) => {
-            if (data.online && data.url) {
-              document.getElementById("status").innerText =
-                "Le serveur est en fonction";
-
-              const btn = document.getElementById("btn");
-              btn.style.display = "block";
-              btn.onclick = () => (window.location.href = data.url);
-            } else {
-              document.getElementById("status").innerText =
-                "Désolé, le serveur est fermé...";
-            }
-          })
-          .catch(() => {
-            document.getElementById("status").innerText = "Erreur de connexion";
-          });
+          fetch("https://hello-word.francoisjmclermont.workers.dev/status")
+            .then(r => {
+              if (!r.ok) throw new Error("HTTP error");
+              return r.json();
+            })
+            .then(data => {
+              if (data.online && data.url) {
+                document.getElementById("status").innerText = "Serveur en fonction";
+                document.getElementById("btn").style.display = "block";
+                document.getElementById("btn").onclick = () => window.location.href = data.url;
+              } else {
+                document.getElementById("status").innerText = "Serveur fermé";
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              document.getElementById("status").innerText = "Erreur de connexion API";
+            });;
       }
     </script>
   </body>
