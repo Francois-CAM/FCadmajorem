@@ -11,23 +11,33 @@
     <h1>Serveur disponible</h1>
     <div id="url"></div>
   </div>
-  <script>
-    const CORRECT_PWD = '1234';
-    const WORKER_URL = 'https://monworker.exemple.workers.dev';  // Remplacez par votre Worker URL
+<script>
+  const CORRECT_PWD = '1234';
+  const WORKER_URL = 'https://VOTRE-WORKER.exemple.workers.dev';  // Mettez vraie URL Worker
 
-    function check() {
-      const input = document.getElementById('pwd').value;
-      if (input === CORRECT_PWD) {
-        document.getElementById('login').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-        fetch(WORKER_URL)
-          .then(res => res.text())
-          .then(text => document.getElementById('url').innerText = text)
-          .catch(() => document.getElementById('url').innerText = 'Erreur récupération URL');
-      } else {
-        document.getElementById('alert').style.display = 'block';
-      }
+  function check() {
+    const input = document.getElementById('pwd').value;
+    if (input === CORRECT_PWD) {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      
+      // Fetch ici : après connexion réussie
+      fetch(WORKER_URL, { mode: 'cors' })
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.text();
+        })
+        .then(text => {
+          document.getElementById('url').innerHTML = `<a href="${text.trim()}" target="_blank">Accéder au site</a>`;
+        })
+        .catch(err => {
+          document.getElementById('url').innerHTML = 'Erreur récupération URL: ' + err.message;
+        });
+    } else {
+      document.getElementById('alert').style.display = 'block';
+      setTimeout(() => document.getElementById('alert').style.display = 'none', 3000);  // Cache alerte
     }
-  </script>
+  }
+</script>
 </body>
 </html>
