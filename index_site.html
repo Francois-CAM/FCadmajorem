@@ -15,28 +15,34 @@
   <pre id="output"></pre>
 </div>
 
-<script>
-const WORKER = "https://TON-WORKER.workers.dev";
+<script id="js1">
+const contenu = document.getElementById("contenu");
 
-function check() {
-  if (document.getElementById("pwd").value === "1234") {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("content").style.display = "block";
-    loadData();
-  } else {
-    alert("Mot de passe incorrect");
-  }
-}
+contenu.innerText = "Connexion...";
 
-function loadData() {
-  fetch(WORKER)
-    .then(r => r.text())
-    .then(url => fetch(url + "/data"))
-    .then(r => r.text())
-    .then(text => {
-      document.getElementById("output").innerText = text;
-    });
-}
+fetch("https://proud-resonance-eaae.francoisjmclermont.workers.dev")
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Erreur HTTP");
+    }
+    return response.text();
+  })
+  .then(url => {
+    return fetch(url + "/data");
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Serveur inaccessible");
+    }
+    return response.text();
+  })
+  .then(data => {
+    contenu.innerText = data;
+  })
+  .catch(error => {
+    console.error(error);
+    contenu.innerText = "Désolé, le serveur est hors ligne.";
+  });
 </script>
 
 </body>
