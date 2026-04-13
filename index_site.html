@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Accès sécurisé</title>
+</head>
+<body>
+
+<div id="login">
+  <h3>Mot de passe :</h3>
+  <input type="password" id="pwd">
+  <button onclick="check()">Entrer</button>
+</div>
+
+<div id="content" style="display:none;">
+  <pre id="output"></pre>
+</div>
+
+<script>
+const WORKER = "https://TON-WORKER.workers.dev";
+
+function check() {
+  if (document.getElementById("pwd").value === "1234") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("content").style.display = "block";
+    loadData();
+  } else {
+    alert("Mot de passe incorrect");
+  }
+}
+
+function loadData() {
+  fetch(WORKER)
+    .then(r => r.text())
+    .then(url => fetch(url + "/data"))
+    .then(r => r.text())
+    .then(text => {
+      document.getElementById("output").innerText = text;
+    });
+}
+</script>
+
+</body>
+</html>
